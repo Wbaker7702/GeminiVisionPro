@@ -13,12 +13,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""
+"""A module for real-time audio and video streaming with the Gemini API.
+
+This script demonstrates how to use the Gemini API to stream audio and video
+data in real-time. It captures audio from the microphone and video from either
+the camera or the screen, and sends it to the Gemini API. The response from the
+API is then played back as audio.
+
 ## Setup
 
 To install the dependencies for this script, run:
 
-``` 
+```
 pip install google-genai opencv-python pyaudio pillow mss
 ```
 
@@ -27,7 +33,7 @@ variable is set to the api-key you obtained from Google AI Studio.
 
 Important: **Use headphones**. This script uses the system default audio
 input and output, which often won't include echo cancellation. So to prevent
-the model from interrupting itself it is important that you use headphones. 
+the model from interrupting itself it is important that you use headphones.
 
 ## Run
 
@@ -85,7 +91,18 @@ pya = pyaudio.PyAudio()
 
 
 class AudioLoop:
+    """A class to manage the real-time audio and video streaming loop.
+
+    This class sets up the audio and video streams, sends the data to the
+    Gemini API, and plays back the audio response.
+    """
     def __init__(self, video_mode=DEFAULT_MODE):
+        """Initializes the AudioLoop.
+
+        Args:
+            video_mode: The video mode to use, either "camera", "screen", or
+                "none".
+        """
         self.video_mode = video_mode
 
         self.audio_in_queue = None
@@ -98,6 +115,7 @@ class AudioLoop:
         self.play_audio_task = None
 
     async def send_text(self):
+        """Sends text input to the Gemini API."""
         while True:
             text = await asyncio.to_thread(
                 input,
@@ -108,6 +126,15 @@ class AudioLoop:
             await self.session.send(input=text or ".", end_of_turn=True)
 
     def _get_frame(self, cap):
+        """Gets a single frame from the camera.
+
+        Args:
+            cap: The OpenCV VideoCapture object.
+
+        Returns:
+            A dictionary containing the mime type and base64-encoded image data,
+            or None if the frame could not be read.
+        """
         # Read the frameq
         ret, frame = cap.read()
         # Check if the frame was read successfully
@@ -129,6 +156,7 @@ class AudioLoop:
         return {"mime_type": mime_type, "data": base64.b64encode(image_bytes).decode()}
 
     async def get_frames(self):
+        """Continuously gets frames from the camera and puts them in the output queue."""
         # This takes about a second, and will block the whole program
         # causing the audio pipeline to overflow if you don't to_thread it.
         cap = await asyncio.to_thread(
@@ -148,6 +176,11 @@ class AudioLoop:
         cap.release()
 
     def _get_screen(self):
+        """Gets a single frame from the screen.
+
+        Returns:
+            A dictionary containing the mime type and base64-encoded image data.
+        """
         sct = mss.mss()
         monitor = sct.monitors[0]
 
@@ -165,6 +198,7 @@ class AudioLoop:
         return {"mime_type": mime_type, "data": base64.b64encode(image_bytes).decode()}
 
     async def get_screen(self):
+        """Continuously gets frames from the screen and puts them in the output queue."""
 
         while True:
             frame = await asyncio.to_thread(self._get_screen)
@@ -176,11 +210,13 @@ class AudioLoop:
             await self.out_queue.put(frame)
 
     async def send_realtime(self):
+        """Sends real-time audio and video data to the Gemini API."""
         while True:
             msg = await self.out_queue.get()
             await self.session.send(input=msg)
 
     async def listen_audio(self):
+        """Listens for audio from the microphone and puts it in the output queue."""
         mic_info = pya.get_default_input_device_info()
         self.audio_stream = await asyncio.to_thread(
             pya.open,
@@ -200,6 +236,7 @@ class AudioLoop:
             await self.out_queue.put({"data": data, "mime_type": "audio/pcm"})
 
     async def receive_audio(self):
+        """Receives audio from the Gemini API and puts it in the input queue."""
         "Background task to reads from the websocket and write pcm chunks to the output queue"
         while True:
             turn = self.session.receive()
@@ -218,6 +255,7 @@ class AudioLoop:
                 self.audio_in_queue.get_nowait()
 
     async def play_audio(self):
+        """Plays audio from the input queue."""
         stream = await asyncio.to_thread(
             pya.open,
             format=FORMAT,
@@ -230,6 +268,7 @@ class AudioLoop:
             await asyncio.to_thread(stream.write, bytestream)
 
     async def run(self):
+        """Runs the main audio and video streaming loop."""
         try:
             async with (
                 client.aio.live.connect(model=MODEL, config=CONFIG) as session,

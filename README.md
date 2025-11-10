@@ -15,9 +15,17 @@ This cookbook is organized into two main categories:
 We also showcase **Demos** in separate repositories, illustrating end-to-end applications of the Gemini API.
 <br><br>
 
+## Setup
+
+Before running the Python scripts in this repository, you'll need to install the necessary dependencies. You can install them using pip:
+
+```
+pip install google-genai opencv-python pyaudio pillow mss websockets
+```
+
 ## What's New?
 
-Here are the recent additions and updates to the Gemini API and the Cookbook: 
+Here are the recent additions and updates to the Gemini API and the Cookbook:
 
 * **Gemini 2.5 models:** Explore the capabilities of the latest Gemini 2.5 models (Flash and Pro)! See the [Get Started Guide](./quickstarts/Get_started.ipynb) and the [thinking guide](./quickstarts/Get_started_thinking.ipynb) as they'll all be thinking ones.
 * **Imagen and Veo**: Get started with our media generation model with this brand new [Veo guide](./quickstarts/Get_started_Veo.ipynb) and [Imagen guide](./quickstarts/Get_started_imagen.ipynb)!
@@ -27,7 +35,7 @@ Here are the recent additions and updates to the Gemini API and the Cookbook:
   * [Grounding](./quickstarts/Grounding.ipynb): Discover different ways to ground Gemini's answer using different tools, from Google Search to Youtube and the new **url context** tool.
   * [Batch-mode](./quickstarts/Batch_mode.ipynb): Use Batch-mode to send large volume of non-time-sensitive requests to the model and get a 50% discount.
 
-  
+
 <br><br>
 
 ## 1. Quick Starts
@@ -48,8 +56,8 @@ We recommend starting with the following:
 
 Then, explore the other quickstarts tutorials to learn about individual features:
 *  [Get started with Live API](./quickstarts/Get_started_LiveAPI.ipynb): Get started with the live API with this comprehensive overview of its capabilities
-*  [Get started with Veo](./quickstarts/Get_started_Veo.ipynb): Get started with our video generation capabilities 
-*  [Get started with Imagen](./quickstarts/Get_started_imagen.ipynb) and [Image-out](./quickstarts/Image_out.ipynb): Get started with our image generation capabilities 
+*  [Get started with Veo](./quickstarts/Get_started_Veo.ipynb): Get started with our video generation capabilities
+*  [Get started with Imagen](./quickstarts/Get_started_imagen.ipynb) and [Image-out](./quickstarts/Image_out.ipynb): Get started with our image generation capabilities
 *  [Grounding](./quickstarts/Search_Grounding.ipynb): use Google Search for grounded responses
 *  [Code execution](./quickstarts/Code_Execution.ipynb): Generating and running Python code to solve complex tasks and even ouput graphs
 *  And [many more](https://github.com/google-gemini/cookbook/tree/main/quickstarts/)
@@ -69,7 +77,7 @@ These examples demonstrate how to combine multiple Gemini API features or 3rd-pa
 
 ## 3. Demos (End-to-End Applications)
 
-These fully functional, end-to-end applications showcase the power of Gemini in real-world scenarios. 
+These fully functional, end-to-end applications showcase the power of Gemini in real-world scenarios.
 
 *   [Gemini API quickstart](https://github.com/google-gemini/gemini-api-quickstart): Python Flask App running with the Google AI Gemini API, designed to get you started building with Gemini's multi-modal capabilities
 *   [Multimodal Live API Web Console](https://github.com/google-gemini/multimodal-live-api-web-console): React-based starter app for using the Multimodal Live API over a websocket

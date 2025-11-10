@@ -13,7 +13,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""
+"""A module for real-time music generation with the Gemini API.
+
+This script demonstrates how to use the Gemini API to generate music in
+real-time. It takes a prompt from the command line and streams the audio back
+over websockets.
+
 ## Setup
 
 To install the dependencies for this script, run:
@@ -62,10 +67,12 @@ client = genai.Client(
 )
 
 async def main():
+    """The main function for the real-time music generation script."""
     p = pyaudio.PyAudio()
     config = types.LiveMusicGenerationConfig()
     async with client.aio.live.music.connect(model=MODEL) as session:
         async def receive():
+            """Receives audio from the Gemini API and plays it back."""
             chunks_count = 0
             output_stream = p.open(
                 format=FORMAT, channels=CHANNELS, rate=OUTPUT_RATE, output=True, frames_per_buffer=CHUNK)
@@ -86,6 +93,7 @@ async def main():
                 await asyncio.sleep(10**-12)
 
         async def send():
+            """Sends user input to the Gemini API."""
             await asyncio.sleep(5) # Allow initial prompt to play a bit
 
             while True:

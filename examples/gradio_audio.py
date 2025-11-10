@@ -12,7 +12,11 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""
+"""A module for creating a Gradio-based voice chat UI for the Gemini API.
+
+This script launches a Gradio-based web UI that allows you to interact with
+the Gemini API using real-time audio streaming.
+
 ## Setup
 
 The gradio-webrtc install fails unless you have ffmpeg@6, on mac:
@@ -68,6 +72,7 @@ KEY_NAME="GOOGLE_API_KEY"
 class GeminiConfig:
     """Configuration settings for Gemini API."""
     def __init__(self):
+        """Initializes the GeminiConfig."""
         self.api_key = os.getenv(KEY_NAME)
         self.host = "generativelanguage.googleapis.com"
         self.model = "models/gemini-2.5-flash-lite-preview-06-17"
@@ -77,7 +82,15 @@ class AudioProcessor:
     """Handles encoding and decoding of audio data."""
     @staticmethod
     def encode_audio(data, sample_rate):
-        """Encodes audio data to base64."""
+        """Encodes audio data to base64.
+
+        Args:
+            data: The audio data as a NumPy array.
+            sample_rate: The sample rate of the audio data.
+
+        Returns:
+            A dictionary containing the base64-encoded audio data.
+        """
         encoded = base64.b64encode(data.tobytes()).decode("UTF-8")
         return {
             "realtimeInput": {
@@ -92,7 +105,14 @@ class AudioProcessor:
 
     @staticmethod
     def process_audio_response(data):
-        """Decodes audio data from base64."""
+        """Decodes audio data from base64.
+
+        Args:
+            data: The base64-encoded audio data.
+
+        Returns:
+            The decoded audio data as a NumPy array.
+        """
         audio_data = base64.b64decode(data)
         return np.frombuffer(audio_data, dtype=np.int16)
 
@@ -100,6 +120,15 @@ class AudioProcessor:
 class GeminiHandler(StreamHandler):
     """Handles streaming interactions with the Gemini API."""
     def __init__(self, expected_layout="mono", output_sample_rate=24000, output_frame_size=480) -> None:
+        """Initializes the GeminiHandler.
+
+        Args:
+            expected_layout: The expected audio layout, which is "mono" by
+                default.
+            output_sample_rate: The output sample rate in Hz, which is 24000
+                by default.
+            output_frame_size: The output frame size, which is 480 by default.
+        """
         super().__init__(expected_layout, output_sample_rate, output_frame_size, input_sample_rate=24000)
         self.config = GeminiConfig()
         self.ws = None
@@ -107,7 +136,11 @@ class GeminiHandler(StreamHandler):
         self.audio_processor = AudioProcessor()
 
     def copy(self):
-        """Creates a copy of the GeminiHandler instance."""
+        """Creates a copy of the GeminiHandler instance.
+
+        Returns:
+            A new instance of the GeminiHandler.
+        """
         return GeminiHandler(
             expected_layout=self.expected_layout,
             output_sample_rate=self.output_sample_rate,
@@ -130,7 +163,12 @@ class GeminiHandler(StreamHandler):
             self.ws = None
 
     def receive(self, frame: tuple[int, np.ndarray]) -> None:
-        """Receives audio/video data, encodes it, and sends it to the Gemini API."""
+        """Receives audio/video data, encodes it, and sends it to the Gemini API.
+
+        Args:
+            frame: A tuple containing the sample rate and the audio data as a
+                NumPy array.
+        """
         try:
             if not self.ws:
                 self._initialize_websocket()
@@ -155,7 +193,11 @@ class GeminiHandler(StreamHandler):
             self.ws = None
 
     def _process_server_content(self, content):
-        """Processes audio output data from the WebSocket response."""
+        """Processes audio output data from the WebSocket response.
+
+        Args:
+            content: The content of the WebSocket response.
+        """
         for part in content.get("parts", []):
             data = part.get("inlineData", {}).get("data", "")
             if data:
@@ -190,7 +232,12 @@ class GeminiHandler(StreamHandler):
                 yield None
 
     def emit(self) -> tuple[int, np.ndarray] | None:
-        """Emits the next audio chunk from the generator."""
+        """Emits the next audio chunk from the generator.
+
+        Returns:
+            A tuple containing the sample rate and the audio data as a NumPy
+            array, or None if the queue is empty.
+        """
         if not self.ws:
             return None
         if not hasattr(self, "_generator"):
@@ -228,7 +275,15 @@ def registry(
         token: str | None = None,
         **kwargs
 ):
-    """Sets up and returns the Gradio interface."""
+    """Sets up and returns the Gradio interface.
+
+    Args:
+        name: The name of the Gradio interface.
+        token: The API key for the Gemini API.
+
+    Returns:
+        The Gradio interface.
+    """
     api_key = token or os.environ.get(KEY_NAME)
     if not api_key:
         raise ValueError(f"{KEY_NAME} environment variable is not set.")
