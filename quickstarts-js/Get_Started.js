@@ -275,15 +275,11 @@ In this example, you'll create a pirate persona, share a secret location, then r
 */
 
 // [CODE STARTS]
-system_instruction = "You are a pirate. Respond to all messages in pirate speak."
+const system_instruction = "You are a pirate. Respond to all messages in pirate speak."
 
-chatConfig = {
-    system_instruction: system_instruction
-}
-
-chat = ai.chats.create({
+const chat = ai.chats.create({
     model: MODEL_ID,
-    config: chatConfig
+    systemInstruction: system_instruction,
 })
 // [CODE ENDS]
 
@@ -328,7 +324,7 @@ chatHistory = chat.getHistory()
 // [CODE STARTS]
 resumedChat = await ai.chats.create({
   model: MODEL_ID,
-  config: chatConfig,
+  systemInstruction: system_instruction,
   history: chatHistory
 });
 
@@ -845,7 +841,7 @@ Here&#x27;s a summary of the provided document in a bulleted list:
     *   A synthetic dataset was created using 100 3D household objects.
     *   For each object, multiple image versions were rendered by systematically changing a *single* material attribute (e.g., roughness, metallic, albedo, transparency) across a range of &quot;edit strengths,&quot; while keeping object shape, lighting, and camera angle constant.
     *   A latent diffusion model (specifically, Stable Diffusion 1.5) was modified to accept an &quot;edit strength&quot; scalar value.
-    *   The model was then fine-tuned on this synthetic dataset, learning to apply material property edits given a context image, text instruction, and the desired edit strength.
+    *   The model was then fine-tuned on this.
 *   **Key Capabilities &amp; Results:**
     *   Achieves photorealistic changes to material properties (e.g., making an object metallic, transparent, rougher).
     *   Successfully preserves the object&#x27;s original shape and the scene&#x27;s lighting conditions.
@@ -976,7 +972,7 @@ Big Buck Bunny continues his pursuit. He creates a booby trap by tying a rock to
 
 Rinky the flying squirrel, with a mischievous grin, prepares to launch himself from a tree branch, using his skin flaps to glide through the air. He targets Big Buck Bunny from above. As he approaches, Big Buck Bunny points upwards, startling Rinky and causing him to lose his focus. Rinky crashes into the spikes Big Buck Bunny had prepared earlier, getting caught on them.
 
-The chinchilla looks on in shock, while the other squirrel laughs, unaware of the fate that awaits him. Big Buck Bunny approaches Rinky, who is stuck to a wooden stick, and picks him up. The video then transitions to the credits, with the chinchilla and the squirrel rolling across the screen before coming to a stop. The credits roll, acknowledging the team and software used to create the animation. The video ends with the flying squirrel flying away, escaping the wrath of Big Buck Bunny.
+The chinchilla looks on in shock, while the other squirrel laughs, unaware of the fate that awaits him. Big Buck Bunny approaches Rinky, who is stuck to a wooden stick, and picks him up. The video then transitions to the credits, with the chinchinlla and the squirrel rolling across the screen before coming to a stop. The credits roll, acknowledging the team and software used to create the animation. The video ends with the flying squirrel flying away, escaping the wrath of Big Buck Bunny.
 
 */
 
