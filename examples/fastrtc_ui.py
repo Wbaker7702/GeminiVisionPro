@@ -14,7 +14,10 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""
+"""A module for creating a web-based UI for the Gen AI SDK Voice Chat.
+
+This script launches a pure-python web-based UI for the Gen AI SDK Voice Chat.
+
 ## Setup
 
 This script launches a pure-python web-based UI for the Gen AI SDK Voice Chat.
@@ -68,7 +71,11 @@ except (ImportError, ModuleNotFoundError):
 
 
 class GeminiHandler(AsyncStreamHandler):
-    """Handler for the Gemini API"""
+    """Handler for the Gemini API.
+
+    This class handles the communication with the Gemini API, including
+    sending and receiving audio data.
+    """
 
     def __init__(
         self,
@@ -76,6 +83,15 @@ class GeminiHandler(AsyncStreamHandler):
         output_sample_rate: int = 24000,
         output_frame_size: int = 480,
     ) -> None:
+        """Initializes the GeminiHandler.
+
+        Args:
+            expected_layout: The expected audio layout, which is "mono" by
+                default.
+            output_sample_rate: The output sample rate in Hz, which is 24000
+                by default.
+            output_frame_size: The output frame size, which is 480 by default.
+        """
         super().__init__(
             expected_layout,
             output_sample_rate,
@@ -87,6 +103,11 @@ class GeminiHandler(AsyncStreamHandler):
         self.quit: asyncio.Event = asyncio.Event()
 
     def copy(self) -> "GeminiHandler":
+        """Creates a copy of the GeminiHandler.
+
+        Returns:
+            A new instance of the GeminiHandler.
+        """
         return GeminiHandler(
             expected_layout="mono",
             output_sample_rate=self.output_sample_rate,
@@ -94,6 +115,7 @@ class GeminiHandler(AsyncStreamHandler):
         )
 
     async def start_up(self):
+        """Starts the Gemini API session."""
         await self.wait_for_args()
         api_key, voice_name = self.latest_args[1:]
 
@@ -123,19 +145,33 @@ class GeminiHandler(AsyncStreamHandler):
                     self.output_queue.put_nowait((self.output_sample_rate, array))
 
     async def stream(self):
+        """Streams audio data to the Gemini API."""
         while not self.quit.is_set():
             yield await wait_for_item(self.input_queue)
 
     async def receive(self, frame: tuple[int, np.ndarray]) -> None:
+        """Receives an audio frame and puts it in the input queue.
+
+        Args:
+            frame: A tuple containing the sample rate and the audio data as a
+                NumPy array.
+        """
         _, array = frame
         array = array.squeeze()
         audio_message = base64.b64encode(array.tobytes()).decode("UTF-8")
         self.input_queue.put_nowait(audio_message)
 
     async def emit(self) -> tuple[int, np.ndarray] | None:
+        """Emits an audio frame from the output queue.
+
+        Returns:
+            A tuple containing the sample rate and the audio data as a NumPy
+            array, or None if the queue is empty.
+        """
         return await wait_for_item(self.output_queue)
 
     def shutdown(self) -> None:
+        """Shuts down the Gemini API session."""
         self.quit.set()
 
 
