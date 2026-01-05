@@ -175,13 +175,15 @@ class GeminiHandler(AsyncStreamHandler):
         self.quit.set()
 
 
-with gr.Blocks() as demo:
+with gr.Blocks(title="Gemini 8K HD Voice Chat", theme=gr.themes.Soft()) as demo:
     gr.HTML(
         """
-        <div style='text-align: center'>
-            <h1>Gen AI SDK Voice Chat</h1>
-            <p>Speak with Gemini using real-time audio streaming</p>
-            <p>Get an API Key <a href="https://support.google.com/googleapi/answer/6158862?hl=en">here</a></p>
+        <div style='text-align: center; padding: 30px; background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%); color: white; border-radius: 12px; margin-bottom: 25px; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);'>
+            <h1 style='font-size: 3.5em; margin-bottom: 15px; font-weight: 800; letter-spacing: -0.025em;'>Gemini 8K HD Voice Chat</h1>
+            <p style='font-size: 1.25em; opacity: 0.95; max-width: 600px; margin: 0 auto 15px;'>Experience the future of conversation with High Definition real-time audio streaming.</p>
+            <div style='margin-top: 20px;'>
+                 <a href="https://support.google.com/googleapi/answer/6158862?hl=en" style='display: inline-block; background-color: rgba(255, 255, 255, 0.2); padding: 8px 16px; border-radius: 6px; color: white; text-decoration: none; font-weight: 600; transition: background-color 0.2s;'>Get API Key &rarr;</a>
+            </div>
         </div>
     """
     )
