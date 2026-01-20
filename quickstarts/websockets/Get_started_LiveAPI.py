@@ -45,24 +45,24 @@ python live_api_starter.py --mode screen
 ```
 """
 
+import argparse
 import asyncio
 import base64
-import json
 import io
+import json
 import os
 import sys
 import traceback
 
 import cv2
-import pyaudio
-import PIL.Image
 import mss
-import argparse
-
+import PIL.Image
+import pyaudio
 from websockets.asyncio.client import connect
 
 if sys.version_info < (3, 11, 0):
-    import taskgroup, exceptiongroup
+    import exceptiongroup
+    import taskgroup
 
     asyncio.TaskGroup = taskgroup.TaskGroup
     asyncio.ExceptionGroup = exceptiongroup.ExceptionGroup
@@ -155,16 +155,16 @@ class AudioLoop:
     def _get_screen(self):
         sct = mss.mss()
         monitor = sct.monitors[0]
-        
+
         i = sct.grab(monitor)
         mime_type = "image/jpeg"
         image_bytes = mss.tools.to_png(i.rgb, i.size)
         img = PIL.Image.open(io.BytesIO(image_bytes))
-        
+
         image_io = io.BytesIO()
         img.save(image_io, format="jpeg")
         image_io.seek(0)
-        
+
         image_bytes = image_io.read()
         return {"mime_type": mime_type, "data": base64.b64encode(image_bytes).decode()}
 
@@ -173,7 +173,7 @@ class AudioLoop:
             frame = await asyncio.to_thread(self._get_screen)
             if frame is None:
                 break
-            
+
             await asyncio.sleep(1.0)
 
             msg = {"realtime_input": {"media_chunks": frame}}
