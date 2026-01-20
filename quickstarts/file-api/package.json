@@ -9,7 +9,7 @@
     },
     "dependencies": {
         "dotenv": "^16.4.5",
-        "googleapis": "^134.0.0",
+        "googleapis": "^170.1.0",
         "mime-types": "^2.1.35"
     },
     "devDependencies": {
