@@ -49,11 +49,11 @@ import sys
 import traceback
 
 import pyaudio
-
 from google import genai
 
 if sys.version_info < (3, 11, 0):
-    import taskgroup, exceptiongroup
+    import exceptiongroup
+    import taskgroup
 
     asyncio.TaskGroup = taskgroup.TaskGroup
     asyncio.ExceptionGroup = exceptiongroup.ExceptionGroup

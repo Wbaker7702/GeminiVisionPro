@@ -12,9 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from google import genai
 import os
+
 from dotenv import load_dotenv
+from google import genai
 
 # Load environment variables from .env file
 load_dotenv()

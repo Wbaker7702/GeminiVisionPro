@@ -56,11 +56,12 @@ don't work.
 
 """
 
-import os
 import base64
 import json
-import numpy as np
+import os
+
 import gradio as gr
+import numpy as np
 import websockets.sync.client
 from gradio_webrtc import StreamHandler, WebRTC
 
@@ -228,7 +229,7 @@ class GeminiHandler(StreamHandler):
             except TimeoutError:
                 print("Timeout waiting for server response")
                 yield None
-            except Exception as e:
+            except Exception:
                 yield None
 
     def emit(self) -> tuple[int, np.ndarray] | None:
