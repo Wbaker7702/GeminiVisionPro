@@ -13,6 +13,6 @@
         "mime-types": "^3.0.2"
     },
     "devDependencies": {
-        "eslint": "^8.0.0"
+        "eslint": "^9.39.2"
     }
 }
