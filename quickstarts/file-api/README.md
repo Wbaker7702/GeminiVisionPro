@@ -17,6 +17,17 @@ Ready to get started? Learn the essentials of uploading files and using them in 
 [Video Colab](https://github.com/google-gemini/cookbook/blob/main/quickstarts/Video.ipynb)
 
 
+## Streamlit App (UI Demo)
+A graphical interface is available to upload files and interact with Gemini.
+
+```bash
+# Install dependencies
+pip3 install -r requirements.txt
+
+# Run the app
+streamlit run streamlit_app.py
+```
+
 ## Python Sample
 ```
 # Prepare a virtual environment for Python.

@@ -35,31 +35,26 @@ async function run(filePath, fileDisplayName) {
         body: fs.createReadStream(filePath),
     };
     var body = {"file": {"displayName": fileDisplayName}};
-    try {
-        // Upload the file
-        const createFileResponse = await genaiService.media.upload({
-            media: media, auth: auth, requestBody:body});
-        const file = createFileResponse.data.file;
-        const fileUri = file.uri;
-        console.log("Uploaded file: " + fileUri);
+    // Upload the file
+    const createFileResponse = await genaiService.media.upload({
+        media: media, auth: auth, requestBody:body});
+    const file = createFileResponse.data.file;
+    const fileUri = file.uri;
+    console.log("Uploaded file: " + fileUri);
 
-        // Make Gemini 1.5 API LLM call
-        const prompt = "Describe the image with a creative description";
-        const model = "models/gemini-2.0-flash";
-        const contents = {'contents': [{ 
-        'parts':[
-            {'text': prompt},
-            {'file_data': {'file_uri': fileUri, 'mime_type': file.mimeType}}]
-        }]}
-        const generateContentResponse = await genaiService.models.generateContent({
-            model: model, requestBody: contents, auth: auth});
-        console.log(JSON.stringify(generateContentResponse.data));
-    }
-    catch (err) {
-        throw err;
-    }
+    // Make Gemini 1.5 API LLM call
+    const prompt = "Describe the image with a creative description";
+    const model = "models/gemini-2.0-flash";
+    const contents = {'contents': [{ 
+    'parts':[
+        {'text': prompt},
+        {'file_data': {'file_uri': fileUri, 'mime_type': file.mimeType}}]
+    }]}
+    const generateContentResponse = await genaiService.models.generateContent({
+        model: model, requestBody: contents, auth: auth});
+    console.log(JSON.stringify(generateContentResponse.data));
 }
 
-filePath = "sample_data/gemini_logo.png";
-fileDisplayName = "Gemini logo";
+const filePath = "sample_data/gemini_logo.png";
+const fileDisplayName = "Gemini logo";
 run(filePath, fileDisplayName);

@@ -4,11 +4,15 @@
     "description": "Sample code to use the File API and make Gemini API requests.",
     "private": true,
     "scripts": {
-        "start": "node sample.js"
+        "start": "node sample.js",
+        "lint": "eslint ."
     },
     "dependencies": {
         "dotenv": "^16.4.5",
         "googleapis": "^134.0.0",
         "mime-types": "^2.1.35"
+    },
+    "devDependencies": {
+        "eslint": "^8.0.0"
     }
 }

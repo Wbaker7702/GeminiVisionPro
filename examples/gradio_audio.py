@@ -56,11 +56,12 @@ don't work.
 
 """
 
-import os
 import base64
 import json
-import numpy as np
+import os
+
 import gradio as gr
+import numpy as np
 import websockets.sync.client
 from gradio_webrtc import StreamHandler, WebRTC
 
@@ -228,7 +229,7 @@ class GeminiHandler(StreamHandler):
             except TimeoutError:
                 print("Timeout waiting for server response")
                 yield None
-            except Exception as e:
+            except Exception:
                 yield None
 
     def emit(self) -> tuple[int, np.ndarray] | None:
@@ -288,14 +289,15 @@ def registry(
     if not api_key:
         raise ValueError(f"{KEY_NAME} environment variable is not set.")
 
-    interface = gr.Blocks()
+    interface = gr.Blocks(title="Gemini 8K HD Voice Chat", theme=gr.themes.Soft())
     with interface:
         with gr.Tabs():
             with gr.TabItem("Voice Chat"):
                 gr.HTML(
                     """
-                    <div style='text-align: left'>
-                        <h1>Gemini API Voice Chat</h1>
+                    <div style='text-align: center; padding: 25px; background: linear-gradient(135deg, #10B981 0%, #3B82F6 100%); color: white; border-radius: 12px; margin-bottom: 25px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);'>
+                        <h1 style='font-size: 3em; margin-bottom: 10px; font-weight: 800; letter-spacing: -0.025em;'>Gemini 8K HD Voice Chat</h1>
+                        <p style='font-size: 1.2em; opacity: 0.95; max-width: 600px; margin: 0 auto;'>Seamless High Definition Voice Interaction</p>
                     </div>
                     """
                 )

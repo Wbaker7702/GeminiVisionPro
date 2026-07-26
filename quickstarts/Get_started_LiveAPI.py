@@ -51,24 +51,22 @@ python Get_started_LiveAPI.py --mode screen
 ```
 """
 
+import argparse
 import asyncio
 import base64
 import io
-import os
 import sys
 import traceback
 
 import cv2
-import pyaudio
-import PIL.Image
 import mss
-
-import argparse
-
+import PIL.Image
+import pyaudio
 from google import genai
 
 if sys.version_info < (3, 11, 0):
-    import taskgroup, exceptiongroup
+    import exceptiongroup
+    import taskgroup
 
     asyncio.TaskGroup = taskgroup.TaskGroup
     asyncio.ExceptionGroup = exceptiongroup.ExceptionGroup
